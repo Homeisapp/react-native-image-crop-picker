@@ -295,7 +295,7 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         
         switch (mediaType) {
             case "video":
-                initIVideoCapture(activity);
+                initVideoCapture(activity);
                 break;
             default:
                 initImageCapture(activity);
@@ -333,20 +333,20 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
     }
     
     
-    private void initIVideoCapture(Activity activity) {
+    private void initVideoCapture(Activity activity) {
         try {
             int requestCode = VIDEO_RECORD_REQUEST;
             Intent cameraIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             
             
-            File imageFile = createVideoFile();
+            File videoFile = createVideoFile();
             
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                mCameraCaptureURI = Uri.fromFile(imageFile);
+                mCameraCaptureURI = Uri.fromFile(videoFile);
             } else {
                 mCameraCaptureURI = FileProvider.getUriForFile(activity,
                                                                activity.getApplicationContext().getPackageName() + ".provider",
-                                                               imageFile);
+                                                               videoFile);
             }
             
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraCaptureURI);
@@ -744,17 +744,11 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
                 return;
             }
             
-            if (cropping) {
-                UCrop.Options options = new UCrop.Options();
-                options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
-                startCropping(activity, uri);
-            } else {
-                try {
-                    resultCollector.setWaitCount(1);
-                    getAsyncSelection(activity, uri, true);
-                } catch (Exception ex) {
-                    resultCollector.notifyProblem(E_NO_IMAGE_DATA_FOUND, ex.getMessage());
-                }
+            try {
+                resultCollector.setWaitCount(1);
+                getAsyncSelection(activity, uri, true);
+            } catch (Exception ex) {
+                resultCollector.notifyProblem(E_NO_IMAGE_DATA_FOUND, ex.getMessage());
             }
         }
     }
@@ -829,7 +823,7 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
     
     private File createVideoFile() throws IOException {
         
-        String imageFileName = "vid-" + UUID.randomUUID().toString();
+        String videoFileName = "vid-" + UUID.randomUUID().toString();
         File path = Environment.getExternalStoragePublicDirectory(
                                                                   Environment.DIRECTORY_MOVIES);
         
@@ -837,12 +831,12 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
             path.mkdirs();
         }
         
-        File image = File.createTempFile(imageFileName, ".mp4", path);
+        File video = File.createTempFile(videoFileName, ".mp4", path);
         
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        mCurrentPhotoPath = "file:" + video.getAbsolutePath();
         
-        return image;
+        return video;
         
     }
     
@@ -858,4 +852,3 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         return map;
     }
 }
-
