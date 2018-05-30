@@ -545,21 +545,28 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         }).run();
     }
     
-    private String resolveRealPath(Activity activity, Uri uri, boolean isCamera) {
-        String path;
+    private String resolveRealPath(Activity activity, Uri uri, boolean isCamera){
         
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            path = RealPathUtil.getRealPathFromURI(activity, uri);
-        } else {
-            if (isCamera) {
-                Uri imageUri = Uri.parse(mCurrentPhotoPath);
-                path = imageUri.getPath();
-            } else {
+        //Handled IOException as it is thrown by getRealPathFromURI method for some devices
+        try{
+            String path;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 path = RealPathUtil.getRealPathFromURI(activity, uri);
+            } else {
+                if (isCamera) {
+                    Uri imageUri = Uri.parse(mCurrentPhotoPath);
+                    path = imageUri.getPath();
+                } else {
+                    path = RealPathUtil.getRealPathFromURI(activity, uri);
+                }
             }
+            
+            return path;
+        }catch (Exception e){
+            e.printStackTrace();
+            return "path not found";
         }
         
-        return path;
     }
     
     private BitmapFactory.Options validateImage(String path) throws Exception {
@@ -852,3 +859,4 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         return map;
     }
 }
+
