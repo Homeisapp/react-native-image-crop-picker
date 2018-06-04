@@ -586,6 +586,20 @@ RCT_EXPORT_METHOD(openCropper:(NSDictionary *)options
     NSString *strFileName = filename;
     NSString *filePath = [[self getTmpDirectory] stringByAppendingString:strFileName];
     NSURL *outputURL = [NSURL fileURLWithPath:filePath];
+    
+    // PS:- if file already present on the Document directory remove and export new selected file.
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:filePath]){
+        NSError *error;
+        BOOL success = [fileManager removeItemAtPath:filePath error:&error];
+        if(!success){
+            strFileName = [[[NSUUID UUID] UUIDString] stringByAppendingString:[NSString stringWithFormat:@".%@",fileExtension]];
+            filePath = [[self getTmpDirectory] stringByAppendingString:strFileName];
+        }
+    }
+    
+    
     // Get compression presets
     NSString *presetKey = [self.options valueForKey:@"compressVideoPreset"];
     if (presetKey == nil) {
