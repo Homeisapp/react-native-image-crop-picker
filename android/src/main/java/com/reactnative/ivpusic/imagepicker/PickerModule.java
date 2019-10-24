@@ -66,10 +66,6 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
     private static final String E_CANNOT_LAUNCH_CAMERA = "E_CANNOT_LAUNCH_CAMERA";
     private static final String E_PERMISSIONS_MISSING = "E_PERMISSION_MISSING";
     private static final String E_ERROR_WHILE_CLEANING_FILES = "E_ERROR_WHILE_CLEANING_FILES";
-    //Grey 800
-    private final String DEFAULT_TINT = "#424242";
-    //Light Blue 500
-    private final String DEFAULT_WIDGET_COLOR = "#03A9F4";
     
     private String mediaType = "any";
     private boolean multiple = false;
@@ -893,7 +889,7 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         File video = File.createTempFile(videoFileName, ".mp4", path);
         
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + video.getAbsolutePath();
+        mCurrentMediaPath = "file:" + video.getAbsolutePath();
         
         return video;
     }
