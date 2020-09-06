@@ -349,11 +349,6 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
                 cameraIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
             }
 
-            if (cameraIntent.resolveActivity(activity.getPackageManager()) == null) {
-                resultCollector.notifyProblem(E_CANNOT_LAUNCH_CAMERA, "Cannot launch camera");
-                return;
-            }
-
             activity.startActivityForResult(cameraIntent, CAMERA_PICKER_REQUEST);
         } catch (Exception e) {
             resultCollector.notifyProblem(E_FAILED_TO_OPEN_CAMERA, e);
